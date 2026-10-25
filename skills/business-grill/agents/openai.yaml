@@ -1,0 +1,4 @@
+interface:
+  display_name: "Business Grill"
+  short_description: "Stress-test business hypotheses with evidence"
+  default_prompt: "Use $business-grill to challenge this business hypothesis and recommend GO, VALIDATE, PIVOT, or STOP."
