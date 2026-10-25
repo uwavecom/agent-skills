@@ -15,6 +15,13 @@ NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 FRONTMATTER_RE = re.compile(r"\A---\s*\n(.*?)\n---\s*(?:\n|\Z)", re.DOTALL)
 MARKDOWN_LINK_RE = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 PLACEHOLDER_RE = re.compile(r"\b(?:TODO|TBD)\b|\[TODO", re.IGNORECASE)
+PUBLIC_REPO_FORBIDDEN_PATTERNS = {
+    "private key": re.compile(r"BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY"),
+    "GitHub token": re.compile(r"(?:ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})"),
+    "AWS access key": re.compile(r"AKIA[0-9A-Z]{16}"),
+    "private Windows user path": re.compile(r"[A-Za-z]:\\Users\\[^\\\r\n]+\\"),
+    "private Unix home path": re.compile(r"/home/[^/\s]+/"),
+}
 
 
 def frontmatter_value(block: str, key: str) -> str | None:
@@ -74,6 +81,19 @@ def validate_skill(skill_dir: Path) -> list[str]:
         if PLACEHOLDER_RE.search(markdown):
             errors.append(f"{markdown_file.relative_to(ROOT)}: unfinished placeholder found")
         validate_local_links(markdown_file, markdown, errors)
+
+    for text_file in skill_dir.rglob("*"):
+        if not text_file.is_file():
+            continue
+        try:
+            content = text_file.read_text(encoding="utf-8-sig")
+        except UnicodeDecodeError:
+            continue
+        for label, pattern in PUBLIC_REPO_FORBIDDEN_PATTERNS.items():
+            if pattern.search(content):
+                errors.append(
+                    f"{text_file.relative_to(ROOT)}: possible {label} in public skill"
+                )
 
     return errors
 
