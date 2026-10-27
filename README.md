@@ -9,6 +9,7 @@
 | Skill | Доступ | Призначення |
 |---|---|---|
 | [`business-grill`](skills/business-grill/) | Public | Доказова перевірка бізнес-гіпотез, інвестицій, операційних моделей і кошторисів з рішенням GO / VALIDATE / PIVOT / STOP та фокусом на делегованість. |
+| [`youtube-music-intelligence`](skills/youtube-music-intelligence/) | Public | Аналіз YouTube-каналів, музичних релізів, трендів та оформлення відео за даними vidIQ з контролем кредитів і доказовими рекомендаціями. |
 
 ## Поділ public/service
 
